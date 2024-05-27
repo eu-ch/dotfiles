@@ -86,7 +86,9 @@
   :custom
   (inhibit-eol-conversion t)
   :hook
-  (minibuffer-setup . cursor-intangible-mode))
+  (minibuffer-setup . cursor-intangible-mode)
+  :config
+  (setq custom-file (concat user-emacs-directory "ignored-custom-file.el")))
 
 (use-package vertico
   :config
@@ -121,7 +123,9 @@
 (use-package org-roam :after org)
 (use-package eldoc :diminish :ensure nil)
 (use-package nerd-icons)
-(use-package doom-themes)
+(use-package doom-themes
+  :config
+  (load-theme 'wombat))
 (use-package doom-modeline
   :ensure t
   :init
@@ -240,26 +244,3 @@
   (setq treemacs-no-png-images t))
 (use-package treemacs-evil :after treemacs)
 (use-package zig-mode)
-
-(setq-default buffer-file-coding-system 'utf-8-unix)
-
-;; -----------------------------------------
-;; AUTO CONFIG
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-enabled-themes '(doom-gruvbox))
- '(custom-safe-themes
-   '("d6b934330450d9de1112cbb7617eaf929244d192c4ffb1b9e6b63ad574784aad" "4e2e42e9306813763e2e62f115da71b485458a36e8b4c24e17a2168c45c9cf9d" "b5fd9c7429d52190235f2383e47d340d7ff769f141cd8f9e7a4629a81abc6b19" "014cb63097fc7dbda3edf53eb09802237961cbb4c9e9abd705f23b86511b0a69" "6f96a9ece5fdd0d3e04daea6aa63e13be26b48717820aa7b5889c602764cf23a" "7ec8fd456c0c117c99e3a3b16aaf09ed3fb91879f6601b1ea0eeaee9c6def5d9" "e14884c30d875c64f6a9cdd68fe87ef94385550cab4890182197b95d53a7cf40" "691d671429fa6c6d73098fc6ff05d4a14a323ea0a18787daeb93fde0e48ab18b" "dd4582661a1c6b865a33b89312c97a13a3885dc95992e2e5fc57456b4c545176" "0c83e0b50946e39e237769ad368a08f2cd1c854ccbcd1a01d39fdce4d6f86478" "00cec71d41047ebabeb310a325c365d5bc4b7fab0a681a2a108d32fb161b4006" "7ea883b13485f175d3075c72fceab701b5bf76b2076f024da50dff4107d0db25" "7e068da4ba88162324d9773ec066d93c447c76e9f4ae711ddd0c5d3863489c52" "ae426fc51c58ade49774264c17e666ea7f681d8cae62570630539be3d06fd964" "636b135e4b7c86ac41375da39ade929e2bd6439de8901f53f88fde7dd5ac3561" "f64189544da6f16bab285747d04a92bd57c7e7813d8c24c30f382f087d460a33" "545ab1a535c913c9214fe5b883046f02982c508815612234140240c129682a68" "4fda8201465755b403a33e385cf0f75eeec31ca8893199266a6aeccb4adedfa4" "2078837f21ac3b0cc84167306fa1058e3199bbd12b6d5b56e3777a4125ff6851" "3fe1ebb870cc8a28e69763dde7b08c0f6b7e71cc310ffc3394622e5df6e4f0da" "be84a2e5c70f991051d4aaf0f049fa11c172e5d784727e0b525565bb1533ec78" "2721b06afaf1769ef63f942bf3e977f208f517b187f2526f0e57c1bd4a000350" "dc8285f7f4d86c0aebf1ea4b448842a6868553eded6f71d1de52f3dcbc960039" "5586a5db9dadef93b6b6e72720205a4fa92fd60e4ccfd3a5fa389782eab2371b" "e3daa8f18440301f3e54f2093fe15f4fe951986a8628e98dcd781efbec7a46f2" "467dc6fdebcf92f4d3e2a2016145ba15841987c71fbe675dcfe34ac47ffb9195" "4ff1c4d05adad3de88da16bd2e857f8374f26f9063b2d77d38d14686e3868d8d" "f458b92de1f6cf0bdda6bce23433877e94816c3364b821eb4ea9852112f5d7dc" "016f665c0dd5f76f8404124482a0b13a573d17e92ff4eb36a66b409f4d1da410" "49acd691c89118c0768c4fb9a333af33e3d2dca48e6f79787478757071d64e68" "eca44f32ae038d7a50ce9c00693b8986f4ab625d5f2b4485e20f22c47f2634ae" "aec7b55f2a13307a55517fdf08438863d694550565dee23181d2ebd973ebd6b8" "2dd4951e967990396142ec54d376cced3f135810b2b69920e77103e0bcedfba9" default))
- '(package-selected-packages
-   '(org-roam consult marginalia orderless vertico zig-mode treemacs-evil treemacs evil-nerd-commenter evil-collection evil dired-single doom-themes diminish which-key undo-fu tree-sitter-langs markdown-mode lua-mode editorconfig doom-modeline company))
- '(treemacs-width 40)
- '(warning-suppress-log-types '((perspective) (auto-save))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
