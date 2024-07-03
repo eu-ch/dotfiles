@@ -83,8 +83,8 @@
   (setq minibuffer-prompt-properties
         '(read-only t cursor-intangible t face minibuffer-prompt))
   (setq enable-recursive-minibuffers t)
-  :custom
-  (inhibit-eol-conversion t)
+  ;; :custom
+  ;; (inhibit-eol-conversion t)
   :hook
   (minibuffer-setup . cursor-intangible-mode)
   :config
@@ -241,6 +241,6 @@
   :bind (("C-/" . evilnc-comment-or-uncomment-lines)))
 (use-package treemacs
   :config
-  (setq treemacs-no-png-images t))
+  (setq treemacs-no-png-images nil))
 (use-package treemacs-evil :after treemacs)
 (use-package zig-mode)
