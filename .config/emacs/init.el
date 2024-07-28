@@ -1,5 +1,5 @@
 ;; ------------------------------------------
-;; Helper functions and variables
+; Helper functions and variables
 
 ; From https://blog.jmthornton.net/p/emacs-project-override
 (defun project-root-override (dir)
@@ -77,6 +77,11 @@
 ; Packages
 ; ------------------------------------------
 
+(straight-use-package 'use-package)
+(use-package straight
+  :custom
+  (straight-use-package-by-default t))
+
 (use-package emacs
   :init
   ;; Do not allow the cursor in the minibuffer prompt
@@ -103,26 +108,30 @@
 (use-package savehist
   :config
   (savehist-mode))
-
 (use-package marginalia
   :config
   (marginalia-mode))
-
 (use-package consult
   :init
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref)
   :config
   (setq consult-narrow-key "<"))
-
 (use-package project
   :config
   (add-hook 'project-find-functions #'project-root-override))
+(use-package activities
+  :init
+  (setq edebug-inhibit-emacs-lisp-mode-bindings t)
+  :hook
+  (after-init . activities)
+  (after-init . activities-tabs))
 
 (use-package org)
 (use-package org-roam :after org)
 (use-package eldoc :diminish :ensure nil)
 (use-package nerd-icons)
+(use-package diminish)
 (use-package doom-themes
   :config
   (load-theme 'wombat))
@@ -130,8 +139,8 @@
   :ensure t
   :init
   (setq doom-modeline-height 30)
-  (set-face-attribute 'mode-line nil :height 140)
-  (doom-modeline-mode 1))
+  :hook
+  (after-init . doom-modeline-mode))
 (use-package undo-fu)
 (use-package which-key :diminish :config (which-key-mode))
 (use-package company
@@ -163,12 +172,15 @@
   :config
   (setq treesit-language-source-alist
         '((yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+	     )
+(use-package tree-sitter-langs :after tree-sitter
   :hook
   (progn-mode . global-tree-sitter-mode)
-  (prog-mode . tree-sitter-hl-mode))
-(use-package tree-sitter-langs :after tree-sitter)
+  (prog-mode . tree-sitter-hl-mode)
+  )
 (use-package dired
   :ensure nil
+  :straight nil
   :commands (dired)
   :custom ((dired-listing-switches "-agho --group-directories-first")
            (dired-dwim-target 1)))
