@@ -19,6 +19,19 @@
 
 (setq ech/init-dir (file-name-parent-directory user-init-file))
 
+(defun eglot--clangd-switch-source-header ()
+  "Switch between the corresponding C/C++ source and header file.
+Only works with clangd."
+  (interactive)
+  (let ((response
+         (eglot--request
+          (eglot--current-server-or-lose)
+          :textDocument/switchSourceHeader (eglot--TextDocumentIdentifier))))
+    (if response
+;;        (funcall #'find-file (eglot-uri-to-path response))
+        (find-file (eglot-uri-to-path response))
+      (user-error "Could not find other file"))))
+
 ;; ------------------------------------------
 ;; UI
 
@@ -71,6 +84,14 @@
               show-trailing-whitespace nil
               tab-width 4)
 
+(setq ff-other-file-alist
+      '(("\\.c" (".h"))
+        ("\\.cpp" (".h" ".hpp"))
+        ("\\.h" (".cpp" ".c")))
+      ff-search-directories
+      '("." "../src" "../include" "../../src/*" "../../include/*" "../../src/*/*" "../../include/*/*")
+      ff-always-try-to-create nil)
+
 (desktop-save-mode 1)
 
 ; ------------------------------------------
@@ -120,12 +141,6 @@
 (use-package project
   :config
   (add-hook 'project-find-functions #'project-root-override))
-(use-package activities
-  :init
-  (setq edebug-inhibit-emacs-lisp-mode-bindings t)
-  :hook
-  (after-init . activities)
-  (after-init . activities-tabs))
 
 (use-package org)
 (use-package org-roam :after org)
@@ -212,13 +227,14 @@
   (define-key evil-normal-state-map (kbd "g D") 'eglot-find-declaration)
   (define-key evil-normal-state-map (kbd "g r") 'xref-find-references)
   (define-key evil-normal-state-map (kbd "SPC b") 'consult-buffer)
-  ;; (define-key evil-normal-state-map (kbd "SPC B") 'consult-project-buffer)
+  (define-key evil-normal-state-map (kbd "SPC B") 'consult-project-buffer)
   (define-key evil-normal-state-map (kbd "SPC e") 'consult-recent-file)
   (define-key evil-normal-state-map (kbd "SPC j") 'dired-jump)
   (define-key evil-normal-state-map (kbd "SPC m") 'consult-bookmark)
   (define-key evil-normal-state-map (kbd "SPC M") 'bookmark-set)
   (define-key evil-normal-state-map (kbd "SPC N") 'make-frame)
   (define-key evil-normal-state-map (kbd "SPC o") 'ff-find-other-file)
+  ;; (define-key evil-normal-state-map (kbd "SPC o") 'eglot--clangd-switch-source-header)
   ;; (define-key evil-normal-state-map (kbd "SPC p 1") 'projectile-configure-project)
   ;; (define-key evil-normal-state-map (kbd "SPC p 2") 'projectile-compile-project)
   ;; (define-key evil-normal-state-map (kbd "SPC p 3") 'projectile-run-project)
