@@ -149,7 +149,7 @@ Only works with clangd."
 (use-package diminish)
 (use-package doom-themes
   :config
-  (load-theme 'wombat))
+  (load-theme 'doom-opera))
 (use-package doom-modeline
   :ensure t
   :init
@@ -270,5 +270,26 @@ Only works with clangd."
 (use-package treemacs
   :config
   (setq treemacs-no-png-images nil))
+(use-package centaur-tabs
+  :demand
+  :init
+  (setq centaur-tabs-set-icons t
+        centaur-tabs-gray-out-icons 'buffer
+        centaur-tabs-set-bar 'left
+        centaur-tabs-set-modified-marker t
+        centaur-tabs-close-button "✕"
+        centaur-tabs-modified-marker "•"
+        centaur-tabs-icon-type 'nerd-icons
+        centaur-tabs-style "rounded"
+        ;; Scrolling (with the mouse wheel) past the end of the tab list
+        ;; replaces the tab list with that of another Doom workspace. This
+        ;; prevents that.
+        centaur-tabs-cycle-scope 'tabs)
+  :config
+  (centaur-tabs-mode t)
+  (centaur-tabs-headline-match)
+  :bind
+  ("C-<prior>" . centaur-tabs-backward)
+  ("C-<next>" . centaur-tabs-forward))
 (use-package treemacs-evil :after treemacs)
 (use-package zig-mode)
