@@ -86,8 +86,9 @@ Only works with clangd."
 
 (setq ff-other-file-alist
       '(("\\.c" (".h"))
+        ("\\.h" (".cpp" ".c"))
         ("\\.cpp" (".h" ".hpp"))
-        ("\\.h" (".cpp" ".c")))
+        ("\\.hpp" (".cpp")))
       ff-search-directories
       '("." "../src" "../include" "../../src/*" "../../include/*" "../../src/*/*" "../../include/*/*")
       ff-always-try-to-create nil)
@@ -114,7 +115,8 @@ Only works with clangd."
   :hook
   (minibuffer-setup . cursor-intangible-mode)
   :config
-  (setq custom-file (concat user-emacs-directory "ignored-custom-file.el")))
+  (setq custom-file (concat user-emacs-directory "ignored-custom-file.el"))
+  (setq ring-bell-function 'ignore))
 
 (use-package vertico
   :config
@@ -148,7 +150,9 @@ Only works with clangd."
 (use-package nerd-icons)
 (use-package diminish)
 (use-package doom-themes
+  :after doom-modeline centaur-tabs
   :config
+  (setq custom-safe-themes t)
   (load-theme 'doom-opera))
 (use-package doom-modeline
   :ensure t
@@ -290,6 +294,8 @@ Only works with clangd."
   (centaur-tabs-headline-match)
   :bind
   ("C-<prior>" . centaur-tabs-backward)
-  ("C-<next>" . centaur-tabs-forward))
+  ("C-<next>" . centaur-tabs-forward)
+  :hook
+  (term-mode . centaur-tabs-local-mode))
 (use-package treemacs-evil :after treemacs)
 (use-package zig-mode)
