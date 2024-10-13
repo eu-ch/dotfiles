@@ -8,6 +8,9 @@
     (when root (if (version<= emacs-version "28")
                     (cons 'vc root)
                  (list 'vc backend root)))))
+
+(setq ech/init-dir (file-name-parent-directory user-init-file))
+
 (defun ech/save-and-kill-this-buffer ()
   (interactive)
   (save-buffer)
@@ -17,7 +20,9 @@
   (interactive)
   (save-some-buffers t))
 
-(setq ech/init-dir (file-name-parent-directory user-init-file))
+(defun ech/edit-init-file ()
+  (interactive)
+  (find-file (concat ech/init-dir "init.el")))
 
 (defun eglot--clangd-switch-source-header ()
   "Switch between the corresponding C/C++ source and header file.
@@ -142,6 +147,7 @@ Only works with clangd."
   (setq consult-narrow-key "<"))
 (use-package project
   :config
+  (fset 'project-prefix-map project-prefix-map) ; this allows project-prefix-map to work with SPC p
   (add-hook 'project-find-functions #'project-root-override))
 
 (use-package org)
@@ -216,46 +222,47 @@ Only works with clangd."
         evil-want-keybinding nil)
   :hook
   (after-init . evil-mode)
+  :bind
+  (:map evil-normal-state-map
+        ;; Code modification
+        ("SPC a" . eglot-code-actions)
+        ("SPC f" . eglot-format)
+        ("SPC q" . eglot-code-action-quickfix)
+        ("SPC r" . eglot-rename)
+        ;; Code navigation
+        (  "g D" . eglot-find-declaration)
+        (  "g b" . xref-pop-marker-stack)
+        (  "g r" . xref-find-references)
+        ("<f12>" . consult-imenu)
+        ("SPC B" . consult-project-buffer)
+        ("SPC M" . bookmark-set)
+        ("SPC N" . make-frame)
+        ("SPC b" . consult-buffer)
+        ("SPC e" . consult-recent-file)
+        ("SPC j" . dired-jump)
+        ("SPC m" . consult-bookmark)
+        ("SPC o" . ff-find-other-file)
+        ;; Buffers and windows
+        ("SPC !" . ech/edit-init-file)
+        ("SPC S" . ech/save-all)
+        ("SPC p" . project-prefix-map)
+        ("SPC s" . save-buffer)
+        ("SPC t" . treemacs)
+        ("SPC w" . kill-current-buffer)
+        ;; Make Ctrl-U work correctly
+        (" C-u" . evil-scroll-up)
+        )
+  (:map evil-insert-state-map
+        ;; Code modification
+        ("M-SPC" . company-complete)
+        )
+  (:map evil-visual-state-map
+        ;; Code modification
+        ("SPC f" . eglot-format)
+        ;; Make Ctrl-U work correctly
+        (" C-u" . evil-scroll-up)
+        )
   :config
-  ; Code modification
-  (define-key evil-insert-state-map (kbd "M-SPC") 'company-complete)
-  (define-key evil-normal-state-map (kbd "SPC a") 'eglot-code-actions)
-  (define-key evil-normal-state-map (kbd "SPC f") 'eglot-format)
-  (define-key evil-normal-state-map (kbd "SPC q") 'eglot-code-action-quickfix)
-  (define-key evil-normal-state-map (kbd "SPC r") 'eglot-rename)
-  (define-key evil-visual-state-map (kbd "SPC f") 'eglot-format)
-
-  ; Code navigation
-  (define-key evil-normal-state-map (kbd "<f12>") 'consult-imenu)
-  (define-key evil-normal-state-map (kbd "g b") 'xref-pop-marker-stack)
-  (define-key evil-normal-state-map (kbd "g D") 'eglot-find-declaration)
-  (define-key evil-normal-state-map (kbd "g r") 'xref-find-references)
-  (define-key evil-normal-state-map (kbd "SPC b") 'consult-buffer)
-  (define-key evil-normal-state-map (kbd "SPC B") 'consult-project-buffer)
-  (define-key evil-normal-state-map (kbd "SPC e") 'consult-recent-file)
-  (define-key evil-normal-state-map (kbd "SPC j") 'dired-jump)
-  (define-key evil-normal-state-map (kbd "SPC m") 'consult-bookmark)
-  (define-key evil-normal-state-map (kbd "SPC M") 'bookmark-set)
-  (define-key evil-normal-state-map (kbd "SPC N") 'make-frame)
-  (define-key evil-normal-state-map (kbd "SPC o") 'ff-find-other-file)
-  ;; (define-key evil-normal-state-map (kbd "SPC o") 'eglot--clangd-switch-source-header)
-  ;; (define-key evil-normal-state-map (kbd "SPC p 1") 'projectile-configure-project)
-  ;; (define-key evil-normal-state-map (kbd "SPC p 2") 'projectile-compile-project)
-  ;; (define-key evil-normal-state-map (kbd "SPC p 3") 'projectile-run-project)
-  (define-key evil-normal-state-map (kbd "SPC s") 'save-buffer)
-  (define-key evil-normal-state-map (kbd "SPC S") 'ech/save-all)
-  (define-key evil-normal-state-map (kbd "SPC t") 'treemacs)
-  (define-key evil-normal-state-map (kbd "SPC w") 'kill-current-buffer)
-
-  ; Random stuff
-  (fset 'project-prefix-map project-prefix-map) ; this allows project-prefix-map to work with SPC p
-  (define-key evil-normal-state-map (kbd "SPC p") 'project-prefix-map)
-  (define-key evil-normal-state-map (kbd "SPC !")
-              (lambda() (interactive)(find-file (concat ech/init-dir "init.el"))))
-  (define-key evil-normal-state-map (kbd "SPC SPC e") 'eglot)
-  ; Make Ctrl-U work correctly
-  (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
-  (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
   ; Apply :q and :wq to a current buffer but not to a frame
   (evil-ex-define-cmd "q" #'kill-this-buffer)
   (evil-ex-define-cmd "wq" #'ech/save-and-kill-this-buffer))
@@ -275,7 +282,6 @@ Only works with clangd."
   :config
   (setq treemacs-no-png-images nil))
 (use-package centaur-tabs
-  :demand
   :init
   (setq centaur-tabs-set-icons t
         centaur-tabs-gray-out-icons 'buffer
@@ -289,6 +295,9 @@ Only works with clangd."
         ;; replaces the tab list with that of another Doom workspace. This
         ;; prevents that.
         centaur-tabs-cycle-scope 'tabs)
+  (if (daemonp)
+      (add-hook 'server-after-make-frame-hook #'centaur-tabs-mode)
+    (add-hook 'doom-first-file-hook #'centaur-tabs-mode))
   :config
   (centaur-tabs-mode t)
   (centaur-tabs-headline-match)
