@@ -1,0 +1,5 @@
+CompileFlags:
+  Add: [-D__INTELLISENSE__, -ferror-limit=0]
+Diagnostics:
+  Suppress: [-Wc++17-extensions]
+  UnusedIncludes: None
