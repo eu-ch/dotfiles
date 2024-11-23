@@ -67,7 +67,7 @@ Only works with clangd."
                 scroll-step 1
                 scroll-up-aggressively 0.01
                 truncate-lines nil)
-  
+
   ;; Other UI settings
   (setq default-frame-alist '((width . 130)))
   (set-face-attribute 'default nil :family "Source Code Pro" :height 115)
@@ -84,7 +84,7 @@ Only works with clangd."
   (set-language-environment "UTF-8")
   (setq default-input-method nil)
   (set-selection-coding-system (if (eq system-type 'windows-nt) 'utf-16-le 'utf-8))
-  
+
   ;; Backup files
   (setq delete-by-copying -1
         delete-old-versions t
@@ -94,8 +94,8 @@ Only works with clangd."
         make-backup-files nil
         backup-directory-alist
         `(("." . (concat user-emacs-directory "backups"))))
-  
-  
+
+
   (setq ff-other-file-alist
           '(("\\.c" (".h"))
             ("\\.h" (".cpp" ".c"))
@@ -226,7 +226,7 @@ Only works with clangd."
 (use-package lsp-ui :commands lsp-ui-mode)
 
 (use-package company
-  :diminish 
+  :diminish
   :hook
   (prog-mode . company-mode)
   :config
@@ -277,25 +277,25 @@ Only works with clangd."
         (  "g D" . lsp-find-definition)
         (  "g b" . xref-pop-marker-stack)
         (  "g r" . lsp-find-references)
-        ("<f12>" . consult-imenu)
         ("SPC B" . consult-projectile)
-        ("SPC l" . lsp-keymap-prefix)
         ("SPC M" . bookmark-set)
         ("SPC N" . make-frame)
         ("SPC b" . consult-buffer)
         ("SPC e" . consult-recent-file)
         ("SPC j" . dired-jump)
+        ("SPC l" . lsp-keymap-prefix)
         ("SPC m" . consult-bookmark)
-        ("SPC o" . ff-find-other-file)
+        ("SPC o" . projectile-find-other-file)
+        ("SPC s" . consult-imenu)
         ;; Buffers and windows
         ("SPC !" . ech/edit-init-file)
-        ("SPC S" . ech/save-all)
+        ("SPC W" . ech/save-all)
         ("SPC p" . projectile-command-map)
-        ("SPC s" . save-buffer)
+        ("SPC q" . kill-current-buffer)
         ("SPC t" . treemacs)
-        ("SPC w" . kill-current-buffer)
+        ("SPC w" . save-buffer)
         ;; Make Ctrl-U work correctly
-        (" C-u" . evil-scroll-up)
+        ( "C-u" . evil-scroll-up)
         )
   (:map evil-insert-state-map
         ;; Code modification

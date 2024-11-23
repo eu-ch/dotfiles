@@ -3,7 +3,7 @@
 # User-configurable
 PROJ_NAME=Kvlt
 BUILD_CONFIG=DebugGame
-ENGINE_PATH=~/Dev/unreal-engine-4/src/unreal-engine-4
+ENGINE_PATH=~/Dev/ue427
 
 PROJ_NAME_EDITOR="${PROJ_NAME}Editor"
 
@@ -67,20 +67,26 @@ run_editor() {
     ${UE_EXE} ${UPROJ_PATH} 
 }
 
+run_ubt() {
+    ${UBT_EXE}
+}
+
 # Lower casing $1 for convenience
 case "${1,,}" in
-    "buildeditor")
+    "buildeditor" | "be")
         build_editor;;
     "clean")
         clean_project;;
-    "generateclangdb")
+    "generateclangdb" | "gc")
         generate_clang_db;;
-    "generatedefaultproject")
+    "generatedefaultproject" | "gp")
         generate_default_project;;
     "generatevscodeproject")
         generate_vscode_project;;
-    "runeditor")
+    "runeditor" | "re")
         run_editor;;
+    "ubt")
+        run_ubt;;
     "" | "-h" | "--help")
         print_usage;;
     *)
